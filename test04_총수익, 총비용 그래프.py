@@ -1,5 +1,6 @@
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 
 input_year_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -31,9 +32,9 @@ for i in input_year_list:
 
     formulaA = func_formulaA(i)
     Result1 = PV * 8760 * formulaA
-    Benefit.append(Result1/100000)
+    Benefit.append(Result1/10000000)
 
-plt.bar(input_year_list, Benefit, label='Benefit', color='limegreen')
+plt.bar(input_year_list, Benefit, label='Benefit', color='lightskyblue')
 
 '''
 x = np.arange(35)
@@ -66,10 +67,39 @@ for i in input_year_list:
 
     formulaA = func_formulaA(i)
     Result2 = Install + formulaA
-    Cost.append(Result2/100000)
+    Cost.append(Result2/10000000)
 
-plt.plot(input_year_list, Cost, label='Cost', color='violet')
+plt.plot(input_year_list, Cost, label='Cost', color='blueviolet')
 
-#그래프
+
+#두 그래프의 교차점
+intersections = []
+prev_dif = 0
+x0, prev_c1, prev_c2 = None, None, None
+for x1, c1, c2 in zip(input_year_list, Benefit, Cost):
+    new_dif = c2 - c1
+    if np.abs(new_dif) < 1e-12:
+        intersections.append(x1, c1)
+    elif new_dif * prev_dif < 0:
+        denom = prev_dif - new_dif
+        intersections.append(((-new_dif*x0  + prev_dif*x1) / denom, (c1*prev_c2 - c2*prev_c1) / denom))
+    x0, prev_c1, prev_c2, prev_dif = x1, c1, c2, new_dif
+print(intersections)
+
+
+#그래프 그리기
 plt.legend()
+plt.xlabel('Time')
+plt.ylabel('Price')
+plt.title('Profit-solar')
+plt.text(27, 195, 'unit: 10,000,000', fontsize = 11,
+         bbox=dict(boxstyle='square', color = 'azure'))
+plt.plot(*zip(*intersections), marker='o',
+         markerfacecolor='tomato', markeredgecolor='tomato',
+         alpha=1, ms=8)
+plt.annotate('B/C ratio=1', xy=intersections[0],
+             arrowprops=dict(arrowstyle='->',
+                             connectionstyle='arc3, rad=-.2',
+                             color='tomato'),
+             xytext=(15, 155), color='tomato')
 plt.show()
