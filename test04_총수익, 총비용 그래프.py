@@ -97,9 +97,9 @@ plt.text(27, 195, 'unit: 10,000,000', fontsize = 11,
 plt.plot(*zip(*intersections), marker='o',
          markerfacecolor='tomato', markeredgecolor='tomato',
          alpha=1, ms=8)
-plt.annotate('B/C ratio=1', xy=intersections[0],
+plt.annotate('Payback Period', xy=intersections[0],
              arrowprops=dict(arrowstyle='->',
                              connectionstyle='arc3, rad=-.2',
                              color='tomato'),
-             xytext=(15, 155), color='tomato')
+             xytext=(10, 155), color='tomato')
 plt.show()
